@@ -1,18 +1,31 @@
 $(document).ready(() => {
-  $(".area-code-search").on('click', () => {
-    console.log("clicked search")
 
+  class Handlers {
+    constructor() {
+
+    }
+
+    getComps (zpid) {
+      console.log("GETTING COMPS", zpid)
+      $.get("http://localhost:8080/zillow/findComps", {zpid:zpid}, (data) => {
+        console.log("response")
+        if (data) {
+          console.log("data:", data);
+        }
+      });
+    }
+  }
+
+  const app = {};
+
+  app.actions = new Handlers();
+
+  // handlers
+  $(".area-code-search").on('click', () => {
     let zpid = $(".area-code-input").val();
 
-    $.get("http://localhost:8080/findComps", {zpid:zpid}, (data) => {
-      console.log("response")
-      if (data) {
-        console.log("data:", data);
-
-        let address = `<div class='address'>${data[0].address[0].city[0]}</div>`
-
-        $(".search-results").append(address)
-      }
-    })
-  })
+    if (zpid) {
+      app.actions.getComps(parseInt(zpid));
+    }
+  });
 });
